@@ -51,6 +51,26 @@ function preloadImages() {
     });
 }
 
+// Request Browser Fullscreen Mode
+function requestFullScreen() {
+    const docEl = document.documentElement;
+    try {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement) {
+            if (docEl.requestFullscreen) {
+                docEl.requestFullscreen().catch(() => {
+                    // Ignore if browser restricts auto-fullscreen
+                });
+            } else if (docEl.webkitRequestFullscreen) {
+                docEl.webkitRequestFullscreen();
+            } else if (docEl.msRequestFullscreen) {
+                docEl.msRequestFullscreen();
+            }
+        }
+    } catch (err) {
+        console.log('Fullscreen request bypassed:', err);
+    }
+}
+
 // Setup Interaction Listeners (Button Clicks, Mobile Tap Zones, Swipes, Keyboard)
 function setupEventListeners() {
     btnNext.addEventListener('click', handleNext);
@@ -102,14 +122,11 @@ function setupEventListeners() {
 function handleNext() {
     if (isTransitioning) return;
 
-    if (images.length === 0) {
-        showPlaceholder();
-        return;
-    }
-
     if (currentIndex === -1) {
         // Transition from Intro Screen to First Image
         startGallery();
+    } else if (images.length === 0) {
+        showPlaceholder();
     } else if (currentIndex < images.length - 1) {
         // Show Next Image
         showImage(currentIndex + 1);
@@ -125,16 +142,25 @@ function handlePrev() {
     showImage(currentIndex - 1);
 }
 
-// Transition from Intro Screen into Gallery
+// Transition from Intro Screen into Gallery & trigger Fullscreen
 function startGallery() {
     isTransitioning = true;
     currentIndex = 0;
+
+    // Switch to browser full screen view on user click
+    requestFullScreen();
 
     introScreen.classList.remove('active');
     
     setTimeout(() => {
         galleryScreen.classList.add('active');
-        showImage(0, true);
+        if (images.length > 0) {
+            showImage(0, true);
+        } else {
+            showPlaceholder();
+            updateControls();
+            isTransitioning = false;
+        }
     }, 400);
 }
 
