@@ -11,8 +11,17 @@ const SECTIONS = {
     colophon: {
         title: "Colophon",
         folder: "colophon",
-        // Local fallback in case GitHub API is unreachable or rate-limited
-        fallbackImages: []
+        // Local fallback list in case GitHub API is offline or rate-limited
+        fallbackImages: [
+            "colophon/mnvnfg.jpeg",
+            "colophon/scary2.jpeg",
+            "colophon/scary3.jpeg",
+            "colophon/scary4.jpeg",
+            "colophon/scary6.jpeg",
+            "colophon/scary7.jpeg",
+            "colophon/WhatsApp Image 2026-10-08 at 19.28.06.jpeg",
+            "colophon/WhatsApp Image 2026-10-08 at 19.28.07.jpeg"
+        ]
     },
     important_memories: {
         title: "Important Memories",
@@ -192,7 +201,7 @@ async function fetchImagesFromGitHub(folderName, fallbackList) {
         if (Array.isArray(data)) {
             const imageUrls = data
                 .filter(item => item.type === "file" && imageExtensions.test(item.name))
-                .map(item => item.download_url || `${folderName}/${item.name}`);
+                .map(item => item.download_url || encodeURI(`${folderName}/${item.name}`));
             
             if (imageUrls.length > 0) {
                 return imageUrls;
