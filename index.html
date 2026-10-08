@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Love Gallery</title>
+    <!-- Google Fonts for romantic serif typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Soft ambient romantic background with floating heart particles -->
+    <canvas id="ambient-canvas"></canvas>
+    
+    <div class="glow-bg"></div>
+
+    <!-- Main Container -->
+    <main class="gallery-container">
+        
+        <!-- 1. Intro Screen -->
+        <section id="intro-screen" class="screen active">
+            <div class="intro-content">
+                <h1 class="intro-title">Welcome to Love Gallery</h1>
+                <p class="intro-subtitle">Our cherished memories, captured in time</p>
+            </div>
+        </section>
+
+        <!-- 2. Image Gallery Screen -->
+        <section id="gallery-screen" class="screen">
+            <div class="image-stage">
+                <!-- Stacked images for smooth crossfade -->
+                <img id="img-active" class="gallery-img active" src="" alt="Memory Photo">
+                <img id="img-next" class="gallery-img" src="" alt="Next Memory Photo">
+            </div>
+
+            <!-- Soft minimal photo caption / counter -->
+            <div id="gallery-counter" class="gallery-counter">
+                <span id="current-index">1</span> <span class="divider">/</span> <span id="total-count">4</span>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 3. Fixed Navigation Arrow Controls -->
+    <nav class="nav-container">
+        <button id="btn-prev" class="nav-btn prev-btn hidden" aria-label="Previous image" title="Previous">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+        </button>
+
+        <button id="btn-next" class="nav-btn next-btn" aria-label="Next image" title="Next">
+            <!-- Right arrow icon -->
+            <svg id="icon-arrow" class="nav-icon" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+            <!-- Replay icon (hidden initially) -->
+            <svg id="icon-replay" class="nav-icon hidden" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.5 2v6h-6"></path>
+                <path d="M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+            </svg>
+        </button>
+    </nav>
+
+    <script src="script.js"></script>
+</body>
+</html>

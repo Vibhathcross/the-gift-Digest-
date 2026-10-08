@@ -1,0 +1,286 @@
+/* ==========================================
+   LOVE GALLERY - ROMANTIC ELEGANT STYLESHEET
+   ========================================== */
+
+/* --- CSS Variables --- */
+:root {
+    --bg-color-1: #fdfbf7;
+    --bg-color-2: #f4ece1;
+    --bg-color-3: #eadad0;
+    --accent-color: #9e6b73;
+    --text-primary: #3a2e30;
+    --text-secondary: #7c686c;
+    --glass-bg: rgba(255, 255, 255, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.8);
+    --shadow-soft: 0 15px 35px rgba(140, 90, 100, 0.12), 0 5px 15px rgba(0, 0, 0, 0.04);
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-sans: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* --- Reset & Base Styles --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    height: 100dvh; /* Handles mobile address bars smoothly */
+    overflow: hidden;
+    font-family: var(--font-sans);
+    background: linear-gradient(135deg, var(--bg-color-1) 0%, var(--bg-color-2) 50%, var(--bg-color-3) 100%);
+    color: var(--text-primary);
+    user-select: none;
+}
+
+/* --- Canvas Ambient Background --- */
+#ambient-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.7;
+}
+
+.glow-bg {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70vw;
+    height: 70vh;
+    background: radial-gradient(circle, rgba(243, 219, 216, 0.4) 0%, rgba(253, 251, 247, 0) 70%);
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(40px);
+}
+
+/* --- Main Layout --- */
+.gallery-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
+}
+
+.screen.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* --- 1. Intro Screen --- */
+.intro-content {
+    text-align: center;
+    padding: 2rem;
+    animation: fadeInSoft 1.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.intro-title {
+    font-family: var(--font-serif);
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--text-primary);
+    margin-bottom: 0.8rem;
+    text-shadow: 0 2px 10px rgba(158, 107, 115, 0.1);
+}
+
+.intro-subtitle {
+    font-size: clamp(0.95rem, 2.2vw, 1.25rem);
+    font-weight: 300;
+    color: var(--text-secondary);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.85;
+}
+
+/* --- 2. Gallery Screen --- */
+.image-stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem 5rem 2rem; /* Generous space so image never touches edges */
+}
+
+/* Absolute containment rule: Never crop image, show entire photo */
+.gallery-img {
+    position: absolute;
+    max-width: calc(100vw - 4rem);
+    max-height: calc(100vh - 8rem);
+    width: auto;
+    height: auto;
+    object-fit: contain; /* ENTIRE IMAGE ALWAYS VISIBLE */
+    border-radius: 14px;
+    box-shadow: var(--shadow-soft);
+    opacity: 0;
+    transform: scale(0.97);
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+.gallery-img.active {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+/* Gallery Counter */
+.gallery-counter {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    color: var(--text-secondary);
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    z-index: 5;
+    opacity: 0.9;
+}
+
+.gallery-counter .divider {
+    margin: 0 0.3rem;
+    opacity: 0.5;
+}
+
+/* --- 3. Fixed Navigation Controls --- */
+.nav-container {
+    position: fixed;
+    bottom: 2.5rem;
+    right: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    z-index: 10;
+}
+
+.nav-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    color: var(--accent-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(158, 107, 115, 0.18), 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    outline: none;
+    opacity: 0;
+    transform: translateY(15px);
+    animation: fadeInBtn 0.8s 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.nav-btn:hover {
+    transform: translateY(-2px) scale(1.06);
+    background: rgba(255, 255, 255, 0.9);
+    color: #844c55;
+    box-shadow: 0 12px 30px rgba(158, 107, 115, 0.28);
+}
+
+.nav-btn:active {
+    transform: translateY(0) scale(0.96);
+}
+
+.nav-btn.hidden {
+    display: none !important;
+}
+
+.nav-icon {
+    width: 24px;
+    height: 24px;
+    transition: opacity 0.3s ease;
+}
+
+.nav-icon.hidden {
+    display: none;
+}
+
+/* --- Animations --- */
+@keyframes fadeInSoft {
+    0% {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInBtn {
+    0% {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    .image-stage {
+        padding: 2rem 1rem 5.5rem 1rem;
+    }
+
+    .gallery-img {
+        max-width: calc(100vw - 2rem);
+        max-height: calc(100vh - 7rem);
+        border-radius: 10px;
+    }
+
+    .nav-container {
+        bottom: 1.8rem;
+        right: 1.8rem;
+    }
+
+    .nav-btn {
+        width: 52px;
+        height: 52px;
+    }
+
+    .gallery-counter {
+        bottom: 1.8rem;
+    }
+}
