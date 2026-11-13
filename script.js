@@ -126,6 +126,21 @@ function setupEventListeners() {
         });
     });
 
+    // Direct event listener for Cosmic Card and Open Book button
+    const cardCosmic = document.getElementById('card-cosmic');
+    if (cardCosmic) {
+        cardCosmic.addEventListener('click', (e) => {
+            openSection('cosmic_love');
+        });
+    }
+    const btnOpenCosmic = document.getElementById('btn-open-cosmic');
+    if (btnOpenCosmic) {
+        btnOpenCosmic.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openSection('cosmic_love');
+        });
+    }
+
     // Gallery navigation
     btnNext.addEventListener('click', handleNext);
     btnPrev.addEventListener('click', handlePrev);
@@ -496,17 +511,23 @@ let isSoundMuted = false;
 let isCosmicStarsInitialized = false;
 
 function openCosmicBook() {
+    if (navControls) navControls.classList.add('hidden');
     switchScreen(sectionsScreen, bookScreen);
-    if (!isCosmicStarsInitialized) {
-        initCosmicStars();
-        isCosmicStarsInitialized = true;
+    try {
+        if (!isCosmicStarsInitialized) {
+            initCosmicStars();
+            isCosmicStarsInitialized = true;
+        }
+    } catch (err) {
+        console.warn('Canvas init bypassed:', err);
     }
     currentBookPage = 0;
     renderBookFolio(0, false);
 }
 
 function renderBookFolio(pageIndex, isFlippingForward = true) {
-    if (!bookPagesStack) return;
+    const stack = bookPagesStack || document.getElementById('book-pages-stack');
+    if (!stack) return;
     const page = COSMIC_PAGES[pageIndex];
     if (!page) return;
 
@@ -662,11 +683,13 @@ let audioCtx = null;
 function playPageChime() {
     if (isSoundMuted) return;
     try {
+        const AudioCtor = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtor) return;
         if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            audioCtx = new AudioCtor();
         }
         if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
+            audioCtx.resume().catch(() => {});
         }
         const now = audioCtx.currentTime;
         const osc1 = audioCtx.createOscillator();
