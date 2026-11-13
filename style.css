@@ -617,7 +617,9 @@ html, body {
 
 /* 4. Cosmic Book Screen */
 #book-screen {
-    background: radial-gradient(circle at 50% 30%, #171126 0%, #0c0818 55%, #05040a 100%);
+    background: 
+        linear-gradient(180deg, rgba(8, 5, 18, 0.72) 0%, rgba(13, 7, 24, 0.82) 100%),
+        url('images/cosmic_bg.jpg') center/cover no-repeat;
     color: #e9dfd0;
     overflow: hidden;
 }

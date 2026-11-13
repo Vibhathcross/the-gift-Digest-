@@ -78,7 +78,33 @@ const bookPagesStack = document.getElementById('book-pages-stack');
 document.addEventListener('DOMContentLoaded', () => {
     initAmbientParticles();
     setupEventListeners();
+    checkDirectRoute();
 });
+
+// Window hash change support (allows back/forward browser navigation)
+window.addEventListener('hashchange', () => {
+    checkDirectRoute();
+});
+
+// Check if URL has a direct link to a section (e.g. #cosmic or ?section=cosmic)
+function checkDirectRoute() {
+    const hash = (window.location.hash || '').toLowerCase();
+    const params = new URLSearchParams(window.location.search);
+    const sectionParam = (params.get('section') || '').toLowerCase();
+
+    if (hash === '#cosmic' || hash === '#cosmic_love' || sectionParam === 'cosmic' || sectionParam === 'cosmic_love') {
+        if (introScreen) introScreen.classList.remove('active');
+        if (sectionsScreen) sectionsScreen.classList.remove('active');
+        if (galleryScreen) galleryScreen.classList.remove('active');
+        openCosmicBook();
+    } else if (hash === '#colophon' || sectionParam === 'colophon') {
+        if (introScreen) introScreen.classList.remove('active');
+        openSection('colophon');
+    } else if (hash === '#memories' || hash === '#important_memories' || sectionParam === 'important_memories' || sectionParam === 'memories') {
+        if (introScreen) introScreen.classList.remove('active');
+        openSection('important_memories');
+    }
+}
 
 // Setup event listeners
 function setupEventListeners() {
@@ -100,6 +126,11 @@ function setupEventListeners() {
         btnBookBack.addEventListener('click', () => {
             switchScreen(bookScreen, sectionsScreen);
             currentSectionKey = null;
+            try {
+                if (window.location.hash) {
+                    history.replaceState(null, '', window.location.pathname);
+                }
+            } catch (e) {}
         });
     }
 
@@ -519,6 +550,11 @@ function openCosmicBook() {
     }
     currentBookPage = 0;
     renderBookFolio(0, false);
+    try {
+        if (window.location.hash !== '#cosmic') {
+            history.replaceState(null, '', '#cosmic');
+        }
+    } catch (e) {}
 }
 
 function renderBookFolio(pageIndex, isFlippingForward = true) {
