@@ -458,8 +458,7 @@ const COSMIC_PAGES = [
         chapterNum: "I",
         chapterTitle: "Two Different Worlds",
         seal: "1",
-        image: "images/cosmic/page1.jpg",
-        caption: "Our story began across separate stars...",
+        caption: "Our story began across separate stars, where two different worlds found their way to one another.",
         paragraphs: [
             "Remember how two people from entirely different worlds, with different backgrounds, lifestyles, and ways of seeing life, somehow found their way to each other.",
             "How the very differences that could have kept us apart became the reasons we learned, grew, and came closer."
@@ -470,8 +469,7 @@ const COSMIC_PAGES = [
         chapterNum: "II",
         chapterTitle: "Sanctuary & Cosmic Energy",
         seal: "2",
-        image: "images/cosmic/page2.jpg",
-        caption: "Where fingers intertwine and time stands still...",
+        caption: "Where fingers intertwine and time pauses... Your hands speak the feelings that words cannot.",
         paragraphs: [
             "Remember how holding your hand always felt like coming home—a place where my heart could be completely at peace.",
             "Your hands speak the feelings words cannot, as if an unseen cosmic energy connects our souls and makes our bond deeper than ordinary love."
@@ -482,8 +480,7 @@ const COSMIC_PAGES = [
         chapterNum: "III",
         chapterTitle: "When Nature Kept Us Close",
         seal: "3",
-        image: "images/cosmic/page3.jpg",
-        caption: "Raindrops, laughter & delayed goodbyes...",
+        caption: "Raindrops, laughter & delayed goodbyes... As if nature itself was trying to keep us together.",
         paragraphs: [
             "Remember those two beautiful moments when I felt like nature itself was trying to keep us together. That day at Microwave Viewpoint, when the unexpected rain turned our little walk into a carefree adventure filled with laughter and childish joy.",
             "And those other moments when rain delayed our goodbyes, giving us a little more time together even when disagreements stood between us."
@@ -494,8 +491,7 @@ const COSMIC_PAGES = [
         chapterNum: "IV",
         chapterTitle: "Moonlight, Fireflies & You",
         seal: "4",
-        image: "images/cosmic/page4.jpg",
-        caption: "A fleeting magic woven just for us...",
+        caption: "Moonlight, fireflies, and a gentle breeze... Yet nothing shone brighter than the blush on your face.",
         paragraphs: [
             "Remember how the night embraced us with moonlight, fireflies, and a gentle breeze, as if the universe had woven a little world just for us.",
             "Yet, nothing shone brighter than the blush on your face—a fleeting magic I wished time would never take away."
@@ -562,24 +558,30 @@ function renderBookFolio(pageIndex, isFlippingForward = true) {
         <div class="page-ornate-border"></div>
         <div class="book-spine-divider"></div>
         
-        <!-- Left Folio Wing (Cameo Illustration) -->
+        <!-- Left Folio Wing (Illuminated Manuscript Sentence) -->
         <div class="folio-wing wing-left">
-            <div class="cameo-frame">
-                <img src="${page.image}" alt="${page.chapterTitle}" class="cameo-img">
-                <div class="cameo-seal">${page.seal}</div>
+            <div class="left-manuscript-wrap">
+                <div class="manuscript-seal-wrap">
+                    <div class="manuscript-seal">${page.seal}</div>
+                    <div class="seal-rays">✧ ✦ ✧</div>
+                </div>
+                <div class="left-poetic-sentence">${page.caption}</div>
+                <div class="left-ornament-line">✦ ··· ✧ ··· ✦</div>
+                <div class="left-whisper-text">A celestial chapter of our love</div>
             </div>
-            <div class="left-page-caption">${page.caption}</div>
         </div>
 
-        <!-- Right Folio Wing (Illuminated Story) -->
+        <!-- Right Folio Wing (Illuminated Story & Prominent Headings) -->
         <div class="folio-wing wing-right">
-            <div class="chapter-badge">✦ CHAPTER ${page.chapterNum} ✦</div>
-            <h2 class="chapter-title">${page.chapterTitle}</h2>
-            <div class="parchment-divider">✧ ✦ ✧</div>
-            <div class="narrative-body" id="current-narrative">
-                ${paragraphsHtml}
-                <div class="cosmic-quote-accent">
-                    "${page.accentQuote}"
+            <div class="right-page-content">
+                <div class="chapter-badge">✦ CHAPTER ${page.chapterNum} ✦</div>
+                <h2 class="chapter-title">${page.chapterTitle}</h2>
+                <div class="parchment-divider">✧ ✦ ✧</div>
+                <div class="narrative-body" id="current-narrative">
+                    ${paragraphsHtml}
+                    <div class="cosmic-quote-accent">
+                        "${page.accentQuote}"
+                    </div>
                 </div>
             </div>
         </div>
