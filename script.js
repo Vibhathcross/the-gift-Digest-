@@ -27,6 +27,10 @@ const SECTIONS = {
         title: "Important Memories",
         folder: "important_memories",
         fallbackImages: []
+    },
+    cosmic_love: {
+        title: "The Cosmic Love Edition",
+        isBook: true
     }
 };
 
@@ -40,6 +44,7 @@ let isTransitioning = false;
 const introScreen = document.getElementById('intro-screen');
 const sectionsScreen = document.getElementById('sections-screen');
 const galleryScreen = document.getElementById('gallery-screen');
+const bookScreen = document.getElementById('book-screen');
 const navControls = document.getElementById('nav-controls');
 
 const btnStart = document.getElementById('btn-start');
@@ -57,6 +62,17 @@ const iconReplay = document.getElementById('icon-replay');
 const categoryTitleEl = document.getElementById('gallery-category-title');
 const currentIndexEl = document.getElementById('current-index');
 const totalCountEl = document.getElementById('total-count');
+
+// Cosmic Book Elements
+const btnBookBack = document.getElementById('btn-book-back');
+const bookBtnPrev = document.getElementById('book-btn-prev');
+const bookBtnNext = document.getElementById('book-btn-next');
+const bookCurrentPageEl = document.getElementById('book-current-page');
+const bookTotalPagesEl = document.getElementById('book-total-pages');
+const bookTapPrev = document.getElementById('book-tap-prev');
+const bookTapNext = document.getElementById('book-tap-next');
+const btnSoundToggle = document.getElementById('btn-sound-toggle');
+const bookPagesStack = document.getElementById('book-pages-stack');
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
@@ -79,6 +95,27 @@ function setupEventListeners() {
         currentSectionKey = null;
     });
 
+    // Cosmic Book Back button
+    if (btnBookBack) {
+        btnBookBack.addEventListener('click', () => {
+            switchScreen(bookScreen, sectionsScreen);
+            currentSectionKey = null;
+        });
+    }
+
+    // Cosmic Book Navigation
+    if (bookBtnNext) bookBtnNext.addEventListener('click', handleBookNext);
+    if (bookBtnPrev) bookBtnPrev.addEventListener('click', handleBookPrev);
+    if (bookTapNext) bookTapNext.addEventListener('click', handleBookNext);
+    if (bookTapPrev) bookTapPrev.addEventListener('click', handleBookPrev);
+
+    if (btnSoundToggle) {
+        btnSoundToggle.addEventListener('click', () => {
+            isSoundMuted = !isSoundMuted;
+            btnSoundToggle.classList.toggle('muted', isSoundMuted);
+        });
+    }
+
     // Section cards clicks
     document.querySelectorAll('.section-card').forEach(card => {
         card.addEventListener('click', () => {
@@ -97,15 +134,26 @@ function setupEventListeners() {
 
     // Keyboard support
     document.addEventListener('keydown', (e) => {
-        if (!galleryScreen.classList.contains('active')) return;
-        if (e.key === 'ArrowRight' || e.key === ' ') {
-            e.preventDefault();
-            handleNext();
-        } else if (e.key === 'ArrowLeft') {
-            e.preventDefault();
-            handlePrev();
-        } else if (e.key === 'Escape') {
-            btnBack.click();
+        if (galleryScreen.classList.contains('active')) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                handleNext();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                handlePrev();
+            } else if (e.key === 'Escape') {
+                btnBack.click();
+            }
+        } else if (bookScreen && bookScreen.classList.contains('active')) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                handleBookNext();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                handleBookPrev();
+            } else if (e.key === 'Escape') {
+                btnBookBack.click();
+            }
         }
     });
 
@@ -119,15 +167,22 @@ function setupEventListeners() {
     }, { passive: true });
 
     document.addEventListener('touchend', (e) => {
-        if (!galleryScreen.classList.contains('active')) return;
         const deltaX = e.changedTouches[0].screenX - touchStartX;
         const deltaY = e.changedTouches[0].screenY - touchStartY;
 
         if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
-            if (deltaX < 0) {
-                handleNext();
-            } else if (deltaX > 0) {
-                handlePrev();
+            if (galleryScreen.classList.contains('active')) {
+                if (deltaX < 0) {
+                    handleNext();
+                } else if (deltaX > 0) {
+                    handlePrev();
+                }
+            } else if (bookScreen && bookScreen.classList.contains('active')) {
+                if (deltaX < 0) {
+                    handleBookNext();
+                } else if (deltaX > 0) {
+                    handleBookPrev();
+                }
             }
         }
     }, { passive: true });
@@ -163,6 +218,13 @@ function switchScreen(fromScreen, toScreen) {
 async function openSection(sectionKey) {
     currentSectionKey = sectionKey;
     const section = SECTIONS[sectionKey];
+    if (!section) return;
+
+    if (section.isBook) {
+        openCosmicBook();
+        return;
+    }
+
     categoryTitleEl.textContent = section.title;
 
     switchScreen(sectionsScreen, galleryScreen);
@@ -370,4 +432,360 @@ function initAmbientParticles() {
     }
 
     animate();
+}
+
+// ==========================================
+// THE COSMIC LOVE EDITION - FANTASY BOOK SYSTEM
+// ==========================================
+
+const COSMIC_PAGES = [
+    {
+        chapterNum: "I",
+        chapterTitle: "Two Different Worlds",
+        seal: "1",
+        image: "images/cosmic/page1.jpg",
+        caption: "Our story began across separate stars...",
+        paragraphs: [
+            "Remember how two people from entirely different worlds, with different backgrounds, lifestyles, and ways of seeing life, somehow found their way to each other.",
+            "How the very differences that could have kept us apart became the reasons we learned, grew, and came closer."
+        ],
+        accentQuote: "And even now, despite all that makes us different, we continue to choose each other. Perhaps our love was never about belonging to the same world, but about creating a beautiful little world of our own."
+    },
+    {
+        chapterNum: "II",
+        chapterTitle: "Sanctuary & Cosmic Energy",
+        seal: "2",
+        image: "images/cosmic/page2.jpg",
+        caption: "Where fingers intertwine and time stands still...",
+        paragraphs: [
+            "Remember how holding your hand always felt like coming home—a place where my heart could be completely at peace.",
+            "Your hands speak the feelings words cannot, as if an unseen cosmic energy connects our souls and makes our bond deeper than ordinary love."
+        ],
+        accentQuote: "In the quiet warmth of your hand, I found an entire sanctuary where the universe makes sense."
+    },
+    {
+        chapterNum: "III",
+        chapterTitle: "When Nature Kept Us Close",
+        seal: "3",
+        image: "images/cosmic/page3.jpg",
+        caption: "Raindrops, laughter & delayed goodbyes...",
+        paragraphs: [
+            "Remember those two beautiful moments when I felt like nature itself was trying to keep us together. That day at Microwave Viewpoint, when the unexpected rain turned our little walk into a carefree adventure filled with laughter and childish joy.",
+            "And those other moments when rain delayed our goodbyes, giving us a little more time together even when disagreements stood between us."
+        ],
+        accentQuote: "Perhaps they were just coincidences, but my heart loved believing that the rain and nature had their own little ways of keeping us close."
+    },
+    {
+        chapterNum: "IV",
+        chapterTitle: "Moonlight, Fireflies & You",
+        seal: "4",
+        image: "images/cosmic/page4.jpg",
+        caption: "A fleeting magic woven just for us...",
+        paragraphs: [
+            "Remember how the night embraced us with moonlight, fireflies, and a gentle breeze, as if the universe had woven a little world just for us.",
+            "Yet, nothing shone brighter than the blush on your face—a fleeting magic I wished time would never take away."
+        ],
+        accentQuote: "Holding the sun, walking beneath fireflies, and choosing you across every lifetime."
+    }
+];
+
+let currentBookPage = 0;
+let isBookFlipping = false;
+let textAnimationTimer = null;
+let isSoundMuted = false;
+let isCosmicStarsInitialized = false;
+
+function openCosmicBook() {
+    switchScreen(sectionsScreen, bookScreen);
+    if (!isCosmicStarsInitialized) {
+        initCosmicStars();
+        isCosmicStarsInitialized = true;
+    }
+    currentBookPage = 0;
+    renderBookFolio(0, false);
+}
+
+function renderBookFolio(pageIndex, isFlippingForward = true) {
+    if (!bookPagesStack) return;
+    const page = COSMIC_PAGES[pageIndex];
+    if (!page) return;
+
+    isBookFlipping = true;
+
+    // Play celestial chime
+    playPageChime();
+
+    // Prepare new folio HTML
+    const folioEl = document.createElement('div');
+    folioEl.className = 'book-folio';
+
+    // Format paragraphs with dynamic word spans
+    const paragraphsHtml = page.paragraphs.map((p, pIdx) => {
+        const words = p.split(' ');
+        let wordsHtml = '';
+        if (pIdx === 0 && words.length > 0) {
+            const firstWord = words[0];
+            const firstLetter = firstWord.charAt(0);
+            const restOfFirstWord = firstWord.slice(1);
+            wordsHtml += `<span class="drop-cap">${firstLetter}</span><span class="magic-word">${restOfFirstWord} </span>`;
+            for (let i = 1; i < words.length; i++) {
+                wordsHtml += `<span class="magic-word">${words[i]} </span>`;
+            }
+        } else {
+            wordsHtml = words.map(w => `<span class="magic-word">${w} </span>`).join('');
+        }
+        return `<p>${wordsHtml}</p>`;
+    }).join('');
+
+    folioEl.innerHTML = `
+        <div class="page-ornate-border"></div>
+        <div class="book-spine-divider"></div>
+        
+        <!-- Left Folio Wing (Cameo Illustration) -->
+        <div class="folio-wing wing-left">
+            <div class="cameo-frame">
+                <img src="${page.image}" alt="${page.chapterTitle}" class="cameo-img">
+                <div class="cameo-seal">${page.seal}</div>
+            </div>
+            <div class="left-page-caption">${page.caption}</div>
+        </div>
+
+        <!-- Right Folio Wing (Illuminated Story) -->
+        <div class="folio-wing wing-right">
+            <div class="chapter-badge">✦ CHAPTER ${page.chapterNum} ✦</div>
+            <h2 class="chapter-title">${page.chapterTitle}</h2>
+            <div class="parchment-divider">✧ ✦ ✧</div>
+            <div class="narrative-body" id="current-narrative">
+                ${paragraphsHtml}
+                <div class="cosmic-quote-accent">
+                    "${page.accentQuote}"
+                </div>
+            </div>
+        </div>
+    `;
+
+    const existingFolios = bookPagesStack.querySelectorAll('.book-folio');
+    if (existingFolios.length > 0) {
+        const oldFolio = existingFolios[existingFolios.length - 1];
+        oldFolio.classList.remove('active');
+        oldFolio.classList.add(isFlippingForward ? 'flipping-next' : 'flipping-prev');
+        
+        bookPagesStack.appendChild(folioEl);
+        
+        setTimeout(() => {
+            folioEl.classList.add('active');
+            oldFolio.remove();
+            isBookFlipping = false;
+            triggerNarrativeAnimation(folioEl.querySelector('.narrative-body'));
+        }, 550);
+    } else {
+        bookPagesStack.appendChild(folioEl);
+        setTimeout(() => {
+            folioEl.classList.add('active');
+            isBookFlipping = false;
+            triggerNarrativeAnimation(folioEl.querySelector('.narrative-body'));
+        }, 50);
+    }
+
+    // Update folio indicators & navigation buttons
+    updateBookControls();
+}
+
+function updateBookControls() {
+    if (bookCurrentPageEl) bookCurrentPageEl.textContent = COSMIC_PAGES[currentBookPage].chapterNum;
+    if (bookTotalPagesEl) bookTotalPagesEl.textContent = "IV";
+
+    if (bookBtnPrev) {
+        bookBtnPrev.disabled = (currentBookPage === 0);
+    }
+
+    if (bookBtnNext) {
+        if (currentBookPage === COSMIC_PAGES.length - 1) {
+            bookBtnNext.innerHTML = `<span>Re-read Chapter I</span> <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M21.5 2v6h-6"></path><path d="M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>`;
+        } else {
+            bookBtnNext.innerHTML = `<span>Turn Page</span> <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
+        }
+    }
+}
+
+function handleBookNext() {
+    if (isBookFlipping) return;
+    if (currentBookPage < COSMIC_PAGES.length - 1) {
+        currentBookPage++;
+        renderBookFolio(currentBookPage, true);
+    } else {
+        // Replay from Chapter I
+        currentBookPage = 0;
+        renderBookFolio(0, true);
+    }
+}
+
+function handleBookPrev() {
+    if (isBookFlipping || currentBookPage <= 0) return;
+    currentBookPage--;
+    renderBookFolio(currentBookPage, false);
+}
+
+function triggerNarrativeAnimation(narrativeEl) {
+    if (!narrativeEl) return;
+    if (textAnimationTimer) {
+        clearInterval(textAnimationTimer);
+        textAnimationTimer = null;
+    }
+
+    const words = narrativeEl.querySelectorAll('.magic-word');
+    if (!words.length) return;
+
+    let index = 0;
+    textAnimationTimer = setInterval(() => {
+        if (index < words.length) {
+            const w = words[index];
+            w.classList.add('revealed', 'sparkle');
+            setTimeout(() => w.classList.remove('sparkle'), 450);
+            index++;
+        } else {
+            clearInterval(textAnimationTimer);
+            textAnimationTimer = null;
+        }
+    }, 38);
+
+    // Instant reveal on tap
+    narrativeEl.onclick = () => {
+        clearInterval(textAnimationTimer);
+        textAnimationTimer = null;
+        words.forEach(w => w.classList.add('revealed'));
+    };
+}
+
+// Celestial audio synthesizer chime
+let audioCtx = null;
+function playPageChime() {
+    if (isSoundMuted) return;
+    try {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        const now = audioCtx.currentTime;
+        const osc1 = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(523.25, now);
+        osc1.frequency.exponentialRampToValueAtTime(783.99, now + 0.35);
+
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(659.25, now);
+        osc2.frequency.exponentialRampToValueAtTime(1046.50, now + 0.45);
+
+        gain.gain.setValueAtTime(0.06, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + 0.55);
+        osc2.stop(now + 0.55);
+    } catch (e) {
+        // Audio might be waiting for user gesture
+    }
+}
+
+// Cosmic Starlight & Shooting Star Animation
+function initCosmicStars() {
+    const canvas = document.getElementById('cosmic-book-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    });
+
+    const stars = [];
+    const starCount = window.innerWidth < 600 ? 55 : 95;
+
+    for (let i = 0; i < starCount; i++) {
+        stars.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            radius: Math.random() * 1.6 + 0.5,
+            alpha: Math.random() * 0.8 + 0.2,
+            speed: Math.random() * 0.02 + 0.005,
+            color: Math.random() > 0.4 ? 'rgba(255, 235, 190,' : (Math.random() > 0.5 ? 'rgba(220, 190, 255,' : 'rgba(255, 190, 210,')
+        });
+    }
+
+    let shootingStar = null;
+
+    function triggerShootingStar() {
+        shootingStar = {
+            x: Math.random() * width * 0.7,
+            y: Math.random() * (height * 0.4),
+            length: Math.random() * 80 + 50,
+            speed: Math.random() * 7 + 9,
+            alpha: 1.0,
+            angle: Math.PI / 4 + (Math.random() - 0.5) * 0.2
+        };
+    }
+
+    setInterval(() => {
+        if (!shootingStar && Math.random() > 0.35) {
+            triggerShootingStar();
+        }
+    }, 4500);
+
+    function animateCosmic() {
+        if (!bookScreen || !bookScreen.classList.contains('active')) {
+            requestAnimationFrame(animateCosmic);
+            return;
+        }
+
+        ctx.clearRect(0, 0, width, height);
+
+        // Draw stars
+        stars.forEach(s => {
+            s.alpha += Math.sin(Date.now() * s.speed) * 0.015;
+            const clampedAlpha = Math.max(0.1, Math.min(0.95, s.alpha));
+            ctx.fillStyle = `${s.color} ${clampedAlpha})`;
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        // Draw shooting star
+        if (shootingStar) {
+            ctx.save();
+            ctx.strokeStyle = `rgba(255, 230, 180, ${shootingStar.alpha})`;
+            ctx.lineWidth = 1.8;
+            ctx.beginPath();
+            ctx.moveTo(shootingStar.x, shootingStar.y);
+            const tailX = shootingStar.x - Math.cos(shootingStar.angle) * shootingStar.length;
+            const tailY = shootingStar.y - Math.sin(shootingStar.angle) * shootingStar.length;
+            ctx.lineTo(tailX, tailY);
+            ctx.stroke();
+            ctx.restore();
+
+            shootingStar.x += Math.cos(shootingStar.angle) * shootingStar.speed;
+            shootingStar.y += Math.sin(shootingStar.angle) * shootingStar.speed;
+            shootingStar.alpha -= 0.025;
+
+            if (shootingStar.alpha <= 0 || shootingStar.x > width || shootingStar.y > height) {
+                shootingStar = null;
+            }
+        }
+
+        requestAnimationFrame(animateCosmic);
+    }
+
+    animateCosmic();
 }

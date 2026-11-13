@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Love Gallery</title>
-    <!-- Google Fonts for romantic typography -->
+    <!-- Google Fonts for romantic and fantasy typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -67,6 +67,20 @@
                         <span class="card-pill">Open Collection &rarr;</span>
                     </div>
                 </div>
+
+                <!-- Card 3: The Cosmic Love Edition -->
+                <div class="section-card cosmic-card" data-section="cosmic_love">
+                    <div class="card-image-wrap">
+                        <img src="images/cosmic_cover.jpg" alt="The Cosmic Love Edition" class="card-cover">
+                        <div class="card-overlay cosmic-overlay"></div>
+                        <span class="cosmic-badge">✦ Fantasy Book</span>
+                    </div>
+                    <div class="card-info">
+                        <h3 class="card-name">The Cosmic Love</h3>
+                        <p class="card-desc">An enchanted fantasy book of our celestial journey</p>
+                        <span class="card-pill cosmic-pill">Open Book &rarr;</span>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -103,6 +117,82 @@
             <div id="gallery-counter" class="gallery-counter">
                 <span id="current-index">1</span> <span class="divider">/</span> <span id="total-count">0</span>
             </div>
+        </section>
+
+        <!-- 4. Cosmic Love Fantasy Book Screen -->
+        <section id="book-screen" class="screen">
+            <canvas id="cosmic-book-canvas"></canvas>
+            <div class="cosmic-nebula-glow"></div>
+
+            <!-- Fantasy Book Header -->
+            <header class="book-header">
+                <button id="btn-book-back" class="back-btn cosmic-back-btn" aria-label="Back to Collections">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    <span>Collections</span>
+                </button>
+                <div class="book-header-title">
+                    <span class="star-icon">✦</span> The Cosmic Love Edition <span class="star-icon">✦</span>
+                </div>
+                <button id="btn-sound-toggle" class="cosmic-sound-btn" aria-label="Toggle Atmosphere Sound" title="Magical Chimes">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    </svg>
+                </button>
+            </header>
+
+            <!-- 3D Fantasy Book Stage -->
+            <div class="book-stage">
+                <!-- Book Leather Casing -->
+                <div class="fantasy-tome-wrapper">
+                    <!-- Ornate Corners & Spine -->
+                    <div class="book-spine-decor"></div>
+                    <div class="book-filigree filigree-tl"></div>
+                    <div class="book-filigree filigree-tr"></div>
+                    <div class="book-filigree filigree-bl"></div>
+                    <div class="book-filigree filigree-br"></div>
+                    <div class="book-ribbon"></div>
+
+                    <!-- 3D Book Body -->
+                    <div class="fantasy-book" id="fantasy-book">
+                        <!-- Book Pages Container -->
+                        <div class="book-pages-stack" id="book-pages-stack">
+                            <!-- Pages are dynamically rendered and animated via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book Navigation & Magic Controls -->
+            <footer class="book-footer">
+                <button id="book-btn-prev" class="book-action-btn prev-page-btn" aria-label="Previous Page">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    <span>Previous</span>
+                </button>
+
+                <div class="book-folio-counter">
+                    <span class="folio-label">Folio</span>
+                    <span id="book-current-page" class="folio-num">I</span>
+                    <span class="folio-sep">✦</span>
+                    <span id="book-total-pages" class="folio-num">IV</span>
+                </div>
+
+                <button id="book-btn-next" class="book-action-btn next-page-btn" aria-label="Next Page">
+                    <span>Turn Page</span>
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </footer>
+
+            <!-- Mobile touch zones for book flipping -->
+            <div id="book-tap-prev" class="book-tap-zone left-tap" aria-label="Flip Left"></div>
+            <div id="book-tap-next" class="book-tap-zone right-tap" aria-label="Flip Right"></div>
         </section>
 
     </main>
